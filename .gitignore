@@ -1,0 +1,7 @@
+make.bat
+__pycache__/
+*.pyc
+venv/
+config.py
+run.bat
+*.json

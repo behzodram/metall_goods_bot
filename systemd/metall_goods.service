@@ -1,0 +1,13 @@
+[Unit]
+Description=Metallom site and admin Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/behzod/github/metall_goods_bot/app
+ExecStart=/home/ubuntu/behzod/github/metall_goods_bot/venv/bin/python main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
