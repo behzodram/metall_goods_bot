@@ -1,39 +1,27 @@
-import telebot
-from telebot.types import (
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-    WebAppInfo
+import logging
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    MessageHandler,
+    ContextTypes,
+    filters
 )
-
 from config import BOT_TOKEN, WEB_URL1, WEB_URL2
 
-bot = telebot.TeleBot(BOT_TOKEN)
+# Logger
+logging.basicConfig(
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
-# Start komandasi
-@bot.message_handler(commands=['start'])
-def start_command(message):
-    """Botni ishga tushirish"""
-    
-    # Tugmalarni yaratish
-    keyboard = InlineKeyboardMarkup(row_width=2)
-    
-    # Birinchi tugma - Main URL
-    keyboard.add(
-        InlineKeyboardButton(
-            "🌐 Main Site",
-            web_app=WebAppInfo(url=WEB_URL1)
-        )
-    )
-    
-    # Ikkinchi tugma - Admin URL
-    keyboard.add(
-        InlineKeyboardButton(
-            "⚙️ Admin Panel",
-            web_app=WebAppInfo(url=WEB_URL2)
-        )
-    )
-    
-    # Xabarni yuborish
+# /start komandasi
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🌐 Main Site", web_app=WebAppInfo(url=WEB_URL1))],
+        [InlineKeyboardButton("⚙️ Admin Panel", web_app=WebAppInfo(url=WEB_URL2))]
+    ])
+
     welcome_text = """
 🤖 *Welcome to Web App Bot!*
 
@@ -41,20 +29,18 @@ def start_command(message):
 🔸 *Admin Panel* - Admin paneli
 
 *Tugmalardan birini bosing:*
+
+"/help yordam komandasi"
     """
-    
-    bot.send_message(
-        message.chat.id,
+
+    await update.message.reply_text(
         welcome_text,
         reply_markup=keyboard,
         parse_mode='Markdown'
     )
 
-# Help komandasi
-@bot.message_handler(commands=['help'])
-def help_command(message):
-    """Yordam xabari"""
-    
+# /help komandasi
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     help_text = """
 *Bot Buyruqlari:*
 
@@ -66,14 +52,10 @@ def help_command(message):
 🌐 Main Site - Asosiy sayt
 ⚙️ Admin Panel - Admin paneli
     """
-    
-    bot.send_message(message.chat.id, help_text, parse_mode='Markdown')
+    await update.message.reply_text(help_text, parse_mode='Markdown')
 
-# URL'lar komandasi
-@bot.message_handler(commands=['urls'])
-def urls_command(message):
-    """URL'lar ro'yxatini ko'rsatish"""
-    
+# /urls komandasi
+async def urls_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     urls_text = f"""
 *📋 Bot URL'lari:*
 
@@ -82,14 +64,10 @@ def urls_command(message):
 
 *Tugmalar orqali ochish uchun /start ni bosing.*
     """
-    
-    bot.send_message(message.chat.id, urls_text, parse_mode='Markdown')
+    await update.message.reply_text(urls_text, parse_mode='Markdown')
 
-# Barcha boshqa xabarlar
-@bot.message_handler(func=lambda message: True)
-def all_messages(message):
-    """Boshqa barcha xabarlarga javob"""
-    
+# Boshqa barcha xabarlar
+async def all_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response_text = """
 🤖 Men faqat Web App ochish uchun botman.
 
@@ -97,14 +75,21 @@ def all_messages(message):
 /help - yordam
 /urls - URL'lar ro'yxati
     """
-    
-    bot.send_message(message.chat.id, response_text)
+    await update.message.reply_text(response_text)
 
-# Botni ishga tushirish
-if __name__ == '__main__':
+# Bot ishga tushirish
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+
+    # Handlerlar
+    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("urls", urls_command))
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), all_messages))
+
     print("🤖 Bot ishga tushdi...")
     print(f"🌐 Main URL: {WEB_URL1}")
     print(f"⚙️ Admin URL: {WEB_URL2}")
     print("\nBotni telegramdan /start bosing!")
-    
-    bot.polling(none_stop=True)
+
+    app.run_polling()
