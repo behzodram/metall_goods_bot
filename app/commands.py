@@ -2,6 +2,9 @@ import json
 import os
 from telegram import Update
 from telegram.ext import ContextTypes
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+
+from config import WEB_URL1, WEB_URL2  # URL'larni config.py dan olib kelamiz
 
 # Foydalanuvchilarni saqlash fayli
 USERS_FILE = "users.json"
@@ -13,22 +16,25 @@ if os.path.exists(USERS_FILE):
 else:
     users = set()
 
-# start komandasi
 # /start komandasi
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Inline web app tugmalarini yaratish
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("🌐 Main Site", web_app=WebAppInfo(url=WEB_URL1))],
         [InlineKeyboardButton("⚙️ Admin Panel", web_app=WebAppInfo(url=WEB_URL2))]
     ])
 
-    user_id = update.message.from_user.id
-    users.add(user_id)  # Takroriy ID qo‘shilmaydi
+    # Foydalanuvchi ID ni saqlash
+    if update.message:  # xavfsizlik uchun tekshirish
+        user_id = update.message.from_user.id
+        users.add(user_id)  # Takroriy ID qo‘shilmaydi
 
-    # Saqlash
-    with open(USERS_FILE, "w") as f:
-        json.dump(list(users), f)
-        
-    welcome_text = """
+        # Saqlash
+        with open(USERS_FILE, "w") as f:
+            json.dump(list(users), f)
+
+        # Xush kelibsiz matni
+        welcome_text = """
 🤖 *Welcome to Web App Bot!*
 
 🔸 *Main Site* - Asosiy sayt
@@ -37,13 +43,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 *Tugmalardan birini bosing:*
 
 /help yordam komandasi
-    """
+        """
 
-    await update.message.reply_text(
-        welcome_text,
-        reply_markup=keyboard,
-        parse_mode='Markdown'
-    )
+        await update.message.reply_text(
+            welcome_text,
+            reply_markup=keyboard,
+            parse_mode='Markdown'
+        )
 
 # stats komandasi
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
