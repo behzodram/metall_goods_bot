@@ -10,7 +10,7 @@ from telegram.ext import (
 from config import BOT_TOKEN, BOT_USERNAME, WEB_URL1, WEB_URL2
 
 # Commands fayldan import qilamiz
-from commands import stats, help_command, share
+from commands import start, stats, help_command, share
 
 # Logger
 logging.basicConfig(

@@ -1,4 +1,5 @@
 version 1.0.x
+version 1.0.3 commands import vaqtida start yozilmagan ekan
 version 1.0.3 /start bosilganda stats counter yoqilmagan ekan tuzatidi
 version 1.0.2 help hamdler duplicate removed
 version 1.0.1 comands.py working
