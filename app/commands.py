@@ -13,6 +13,38 @@ if os.path.exists(USERS_FILE):
 else:
     users = set()
 
+# start komandasi
+# /start komandasi
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🌐 Main Site", web_app=WebAppInfo(url=WEB_URL1))],
+        [InlineKeyboardButton("⚙️ Admin Panel", web_app=WebAppInfo(url=WEB_URL2))]
+    ])
+
+    user_id = update.message.from_user.id
+    users.add(user_id)  # Takroriy ID qo‘shilmaydi
+
+    # Saqlash
+    with open(USERS_FILE, "w") as f:
+        json.dump(list(users), f)
+        
+    welcome_text = """
+🤖 *Welcome to Web App Bot!*
+
+🔸 *Main Site* - Asosiy sayt
+🔸 *Admin Panel* - Admin paneli
+
+*Tugmalardan birini bosing:*
+
+/help yordam komandasi
+    """
+
+    await update.message.reply_text(
+        welcome_text,
+        reply_markup=keyboard,
+        parse_mode='Markdown'
+    )
+
 # stats komandasi
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Bot foydalanuvchilari soni: {len(users)}")

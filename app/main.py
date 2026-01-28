@@ -18,30 +18,6 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# /start komandasi
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🌐 Main Site", web_app=WebAppInfo(url=WEB_URL1))],
-        [InlineKeyboardButton("⚙️ Admin Panel", web_app=WebAppInfo(url=WEB_URL2))]
-    ])
-
-    welcome_text = """
-🤖 *Welcome to Web App Bot!*
-
-🔸 *Main Site* - Asosiy sayt
-🔸 *Admin Panel* - Admin paneli
-
-*Tugmalardan birini bosing:*
-
-/help yordam komandasi
-    """
-
-    await update.message.reply_text(
-        welcome_text,
-        reply_markup=keyboard,
-        parse_mode='Markdown'
-    )
-
 # Boshqa barcha xabarlar
 async def all_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response_text = """
@@ -57,7 +33,7 @@ if __name__ == "__main__":
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     # Handlerlar
-    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("stats", stats))
     app.add_handler(CommandHandler("help", help_command))
     # share uchun lambda orqali BOT_USERNAME beriladi
