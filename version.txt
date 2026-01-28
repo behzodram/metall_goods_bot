@@ -1,2 +1,3 @@
 version 1.0.x
+version 1.0.1 comands.py added
 version 1.0.0 req.txt changed, commands.py added, main.py changed bu as before working with async def s

@@ -13,20 +13,6 @@ if os.path.exists(USERS_FILE):
 else:
     users = set()
 
-# start komandasi
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.message.from_user.id
-    users.add(user_id)  # Takroriy ID qo‘shilmaydi
-
-    # Saqlash
-    with open(USERS_FILE, "w") as f:
-        json.dump(list(users), f)
-
-    await update.message.reply_text(
-        "Salom 👋\nMen Aks Sado botman!\nNima yozsangiz, o'shasini qaytaraman.\n\n"
-        "/help buyrug'ini yozib, yordam olishingiz mumkin."
-    )
-
 # stats komandasi
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Bot foydalanuvchilari soni: {len(users)}")

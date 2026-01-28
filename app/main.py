@@ -7,7 +7,10 @@ from telegram.ext import (
     ContextTypes,
     filters
 )
-from config import BOT_TOKEN, WEB_URL1, WEB_URL2
+from config import BOT_TOKEN, BOT_USERNAME, WEB_URL1, WEB_URL2
+
+# Commands fayldan import qilamiz
+from commands import stats, help_command, share
 
 # Logger
 logging.basicConfig(
@@ -30,7 +33,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 *Tugmalardan birini bosing:*
 
-"/help yordam komandasi"
+/help yordam komandasi
     """
 
     await update.message.reply_text(
@@ -54,18 +57,6 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     await update.message.reply_text(help_text, parse_mode='Markdown')
 
-# /urls komandasi
-async def urls_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    urls_text = f"""
-*📋 Bot URL'lari:*
-
-🔸 *Main Site:* `{WEB_URL1}`
-🔸 *Admin Panel:* `{WEB_URL2}`
-
-*Tugmalar orqali ochish uchun /start ni bosing.*
-    """
-    await update.message.reply_text(urls_text, parse_mode='Markdown')
-
 # Boshqa barcha xabarlar
 async def all_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response_text = """
@@ -73,7 +64,6 @@ async def all_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 /start - tugmalarni olish
 /help - yordam
-/urls - URL'lar ro'yxati
     """
     await update.message.reply_text(response_text)
 
@@ -83,8 +73,12 @@ if __name__ == "__main__":
 
     # Handlerlar
     app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("stats", stats))
     app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("urls", urls_command))
+    # share uchun lambda orqali BOT_USERNAME beriladi
+    app.add_handler(CommandHandler("share", lambda u, c: share(u, c, BOT_USERNAME)))
+
+    # Web handler
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), all_messages))
 
     print("🤖 Bot ishga tushdi...")
