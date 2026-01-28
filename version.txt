@@ -1,3 +1,4 @@
 version 1.0.x
+version 1.0.2 help hamdler duplicate removed
 version 1.0.1 comands.py working
 version 1.0.0 req.txt changed, commands.py added, main.py changed bu as before working with async def s

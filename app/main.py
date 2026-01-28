@@ -42,21 +42,6 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode='Markdown'
     )
 
-# /help komandasi
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    help_text = """
-*Bot Buyruqlari:*
-
-/start - Botni ishga tushirish
-/help - Yordam ko'rsatish
-/urls - URL'lar ro'yxati
-
-*Tugmalar:*
-🌐 Main Site - Asosiy sayt
-⚙️ Admin Panel - Admin paneli
-    """
-    await update.message.reply_text(help_text, parse_mode='Markdown')
-
 # Boshqa barcha xabarlar
 async def all_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response_text = """
